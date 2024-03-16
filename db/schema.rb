@@ -10,9 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_15_154458) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_16_175151) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "disbursements", force: :cascade do |t|
+    t.string "reference"
+    t.string "merchant_reference", null: false
+    t.decimal "amount", precision: 10, scale: 2
+    t.decimal "fee", precision: 10, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["reference", "merchant_reference"], name: "index_disbursements_on_reference_and_merchant_reference", unique: true
+  end
 
   create_table "merchants", force: :cascade do |t|
     t.string "guid", null: false
@@ -29,11 +39,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_15_154458) do
   create_table "orders", force: :cascade do |t|
     t.string "guid", null: false
     t.integer "status", default: 0, null: false
-    t.string "merchant_reference", null: false
     t.decimal "amount", precision: 10, scale: 2
+    t.decimal "fee", precision: 10, scale: 2
+    t.decimal "to_pay", precision: 10, scale: 2
+    t.string "merchant_reference", null: false
+    t.string "disbursement_reference"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["guid", "merchant_reference"], name: "index_orders_on_guid_and_merchant_reference", unique: true
+    t.index ["guid", "merchant_reference", "disbursement_reference"], name: "idx_on_guid_merchant_reference_disbursement_referen_b5db024733", unique: true
   end
 
 end
