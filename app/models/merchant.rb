@@ -14,8 +14,11 @@
 #
 class Merchant < ApplicationRecord
   has_many :orders, foreign_key: :merchant_reference, primary_key: :reference
+  has_many :disbursements, foreign_key: :merchant_reference, primary_key: :reference
 
-  enum disbursement_frequency: { daily: 0, weekly: 1, monthly: 2 }
+  enum disbursement_frequency: { daily: 0, weekly: 1 }
 
   validates :guid, :reference, presence: true, uniqueness: true
+
+
 end

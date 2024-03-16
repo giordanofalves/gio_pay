@@ -12,6 +12,7 @@
 #
 class Order < ApplicationRecord
   belongs_to :merchant, foreign_key: :merchant_reference, primary_key: :reference
+  has_one :payment
 
   enum status: { pending: 0, processed: 1, failed: 2 }
 end
