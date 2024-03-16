@@ -4,15 +4,19 @@ ruby "3.2.3"
 
 gem "bootsnap", require: false
 gem "pg"
+gem 'progress_bar'
 gem "puma", ">= 5.0"
 gem "rails", "~> 7.1.3", ">= 7.1.3.2"
+gem "sprockets-rails"
 
 group :development do
+  gem 'annotate'
   gem "web-console"
 end
 
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ]
+  gem 'pry', '~> 0.14.2'
 end
 
 group :test do

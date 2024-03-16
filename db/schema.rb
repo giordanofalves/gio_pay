@@ -15,28 +15,25 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_15_154458) do
   enable_extension "plpgsql"
 
   create_table "merchants", force: :cascade do |t|
-    t.string "guid"
-    t.string "reference"
+    t.string "guid", null: false
+    t.string "reference", null: false
     t.string "email"
     t.datetime "live_on"
     t.integer "disbursement_frequency"
-    t.decimal "minimum_monthly_fee"
+    t.decimal "minimum_monthly_fee", precision: 10, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["guid"], name: "index_merchants_on_guid", unique: true
-    t.index ["reference"], name: "index_merchants_on_reference", unique: true
+    t.index ["guid", "reference"], name: "index_merchants_on_guid_and_reference", unique: true
   end
 
   create_table "orders", force: :cascade do |t|
-    t.string "guid"
+    t.string "guid", null: false
     t.integer "status", default: 0, null: false
-    t.bigint "merchant_id", null: false
+    t.string "merchant_reference", null: false
     t.decimal "amount", precision: 10, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["guid"], name: "index_orders_on_guid", unique: true
-    t.index ["merchant_id"], name: "index_orders_on_merchant_id"
+    t.index ["guid", "merchant_reference"], name: "index_orders_on_guid_and_merchant_reference", unique: true
   end
 
-  add_foreign_key "orders", "merchants"
 end
