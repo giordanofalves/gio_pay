@@ -37,6 +37,7 @@ namespace :import do
 
     progress_bar = ProgressBar.new(orders.count)
     puts "Inserting #{orders.count} orders into the database...."
+
     orders.each_slice(1000) do |batch|
       Order.insert_all(batch)
       progress_bar.increment!(batch.count)
@@ -56,7 +57,6 @@ namespace :import do
 
   def parse_order_data(row)
     row["guid"] = row.delete("id")
-
     row
   end
 end

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 require 'csv'
 
-# usage e.g.: rake 'import:merchants[lib/fixtures/merchants.csv]'
+# usage e.g.: rake disbursement:process
 namespace :disbursement do
   # desc 'Import Merchants from a CSV file'
   # task :daily => :environment do |t|
@@ -20,16 +20,18 @@ namespace :disbursement do
 
   #   puts 'Merchants imported successfully!'
   # end
-  desc 'Process daily disbursements'
-  task :process_daily_disbursements => :environment do |t|
+  desc 'Process  disbursements'
+  task :process => :environment do |t|
     puts 'Starting to process daily disbursements....'
 
     # Get all pending orders
     merchants    = Merchant.all
     progress_bar = ProgressBar.new(merchants.count)
 
-    merchants.each_with_index do |merchant, index|
-      merchant.perform_disbursements
+    # move it to a background job
+    merchants.each do |merchant|
+      CreateDisbursementJob.perform_later(merchant.id)
+
       progress_bar.increment!
     end
 

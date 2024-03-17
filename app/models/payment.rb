@@ -11,6 +11,6 @@
 #  updated_at      :datetime         not null
 #
 class Payment < ApplicationRecord
-  belongs_to :order
-  belongs_to :disbursement
+  # belongs_to :order
+  # belongs_to :disbursement
 end

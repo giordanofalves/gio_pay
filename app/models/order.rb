@@ -2,19 +2,29 @@
 #
 # Table name: orders
 #
-#  id                 :bigint           not null, primary key
-#  guid               :string           not null
-#  status             :integer          default("pending"), not null
-#  merchant_reference :string           not null
-#  amount             :decimal(10, 2)
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
+#  id                     :bigint           not null, primary key
+#  guid                   :string           not null
+#  status                 :integer          default("pending"), not null
+#  amount                 :decimal(10, 2)
+#  fee                    :decimal(10, 2)
+#  to_pay                 :decimal(10, 2)
+#  merchant_reference     :string           not null
+#  disbursement_reference :string           not null
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
 #
 class Order < ApplicationRecord
   belongs_to :merchant, foreign_key: :merchant_reference, primary_key: :reference
-  has_one :payment
+  belongs_to :disbursement, foreign_key: :disbursement_reference, primary_key: :reference, optional: true
 
   enum status: { pending: 0, processed: 1, failed: 2 }
+
+  def generate_fee
+    fee = calculate_fee
+    update(to_pay: (amount - fee), fee: fee)
+  end
+
+  private
 
   def calculate_fee
     case amount

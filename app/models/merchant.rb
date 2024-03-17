@@ -43,6 +43,6 @@ class Merchant < ApplicationRecord
   def process_disbursements(date, orders)
     disbursement = disbursements.create(created_at: date)
 
-    disbursement.process_payments(orders)
+    disbursement.process_orders(orders)
   end
 end

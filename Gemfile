@@ -7,6 +7,7 @@ gem "pg"
 gem 'progress_bar'
 gem "puma", ">= 5.0"
 gem "rails", "~> 7.1.3", ">= 7.1.3.2"
+gem "sidekiq"
 gem "sprockets-rails"
 
 group :development do

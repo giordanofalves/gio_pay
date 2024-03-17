@@ -2,13 +2,16 @@
 #
 # Table name: orders
 #
-#  id                 :bigint           not null, primary key
-#  guid               :string           not null
-#  status             :integer          default("pending"), not null
-#  merchant_reference :string           not null
-#  amount             :decimal(10, 2)
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
+#  id                     :bigint           not null, primary key
+#  guid                   :string           not null
+#  status                 :integer          default("pending"), not null
+#  amount                 :decimal(10, 2)
+#  fee                    :decimal(10, 2)
+#  to_pay                 :decimal(10, 2)
+#  merchant_reference     :string           not null
+#  disbursement_reference :string           not null
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
 #
 require 'rails_helper'
 
