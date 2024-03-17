@@ -17,11 +17,12 @@ class Disbursement < ApplicationRecord
   after_create :generate_reference
   # todo allow to create disbursements only before 08:00 UTC
 
-  def process_orders(orders_data)
-    orders_data.each(&:generate_fee)
-    update(amount: orders_data.sum(&:to_pay), fee: orders_data.sum(&:to_pay))
+  def process_orders(order_ids)
+    orders        = Order.where(id: order_ids)
+    orders_values = orders.pluck('SUM(to_pay)', 'SUM(fee)').map { |to_pay, fee| { to_pay: to_pay, fee: fee } }.first
 
-    orders_data.each{ |o| o.update(disbursement_reference: reference, status: :processed) }
+    update(amount: orders_values[:to_pay], fee: orders_values[:fee])
+    orders.update_all(disbursement_reference: reference, status: :processed)
   end
 
   private

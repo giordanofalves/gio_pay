@@ -30,11 +30,10 @@ namespace :disbursement do
 
     # move it to a background job
     merchants.each do |merchant|
-      CreateDisbursementJob.perform_later(merchant.id)
-
       progress_bar.increment!
+      merchant.perform_disbursements
     end
 
-    puts 'Disbursements processed successfully!'
+    puts 'All disbursements are queued to process now'
   end
 end

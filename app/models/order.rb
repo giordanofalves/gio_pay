@@ -19,21 +19,34 @@ class Order < ApplicationRecord
 
   enum status: { pending: 0, processed: 1, failed: 2 }
 
+  after_create :generate_fee
+
   def generate_fee
-    fee = calculate_fee
+    fee = self.class.calculate_fee
     update(to_pay: (amount - fee), fee: fee)
   end
 
-  private
-
-  def calculate_fee
-    case amount
+  def self.calculate_fee(amout_value)
+    case amout_value
     when 0..49.99
-      amount * 0.01
+      amout_value * 0.01
     when 50..300
-      amount * 0.0095
+      amout_value * 0.0095
     else
-      amount * 0.0085
+      amout_value * 0.0085
     end
   end
+
+  # private
+
+  # def calculate_fee
+  #   case amount
+  #   when 0..49.99
+  #     amount * 0.01
+  #   when 50..300
+  #     amount * 0.0095
+  #   else
+  #     amount * 0.0085
+  #   end
+  # end
 end

@@ -21,28 +21,29 @@ class Merchant < ApplicationRecord
   validates :guid, :reference, presence: true, uniqueness: true
 
   def perform_disbursements
-    daily? ? perform_daily_disbursement(orders.pending) : perform_weekly_disbursement(orders.pending)
+    orders_data = orders.pending.select(:id, :created_at)
+    daily? ? perform_daily_disbursement(orders_data) : perform_weekly_disbursement(orders_data)
   end
 
   private
 
-  def perform_daily_disbursement(orders)
-    orders.group_by(&:created_at).each do |date, orders|
+  def perform_daily_disbursement(orders_data)
+    orders_data.group_by(&:created_at).each do |date, orders|
       process_disbursements(date, orders)
     end
   end
 
-  def perform_weekly_disbursement(orders)
+  def perform_weekly_disbursement(orders_data)
     start_week_day = live_on.strftime("%A").downcase.to_sym
 
-    orders.group_by { |order| order.created_at.beginning_of_week(start_day = start_week_day) }.each do |date, orders|
+    orders_data.group_by { |order| order.created_at.beginning_of_week(start_day = start_week_day) }.each do |date, orders|
       process_disbursements(date, orders)
     end
   end
 
   def process_disbursements(date, orders)
-    disbursement = disbursements.create(created_at: date)
+    order_ids = orders.pluck(:id)
 
-    disbursement.process_orders(orders)
+    CreateDisbursementJob.perform_later(id, date, order_ids)
   end
 end

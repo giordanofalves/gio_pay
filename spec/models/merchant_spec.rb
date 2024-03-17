@@ -20,6 +20,6 @@ RSpec.describe Merchant, type: :model do
   end
 
   describe 'enums' do
-    it { should define_enum_for(:disbursement_frequency).with_values(daily: 0, weekly: 1, monthly: 2) }
+    it { should define_enum_for(:disbursement_frequency).with_values(daily: 0, weekly: 1) }
   end
 end
