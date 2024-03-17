@@ -12,7 +12,7 @@ class Disbursement < ApplicationRecord
       fee    = order.calculate_fee
       amount = (order.amount - fee)
 
-      payments.create(amount: amount, fee: fee)
+      payments.create(amount: amount, fee: fee, order_id: order.id)
     end
 
     update(amount: payments.sum(:amount), fee: payments.sum(:fee))
