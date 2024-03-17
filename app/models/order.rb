@@ -15,4 +15,15 @@ class Order < ApplicationRecord
   has_one :payment
 
   enum status: { pending: 0, processed: 1, failed: 2 }
+
+  def calculate_fee
+    case amount
+    when 0..49.99
+      amount * 0.01
+    when 50..300
+      amount * 0.0095
+    else
+      amount * 0.0085
+    end
+  end
 end
