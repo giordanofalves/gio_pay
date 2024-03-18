@@ -28,7 +28,7 @@ class Merchant < ApplicationRecord
   private
 
   def perform_daily_disbursement(orders_data)
-    orders_data.group_by(&:created_at).each do |date, orders|
+    orders_data.by_day.each do |date, orders|
       process_disbursements(date, orders)
     end
   end
@@ -36,7 +36,7 @@ class Merchant < ApplicationRecord
   def perform_weekly_disbursement(orders_data)
     start_week_day = live_on.strftime("%A").downcase.to_sym
 
-    orders_data.group_by { |order| order.created_at.beginning_of_week(start_day = start_week_day) }.each do |date, orders|
+    orders_data.by_week_day(start_week_day).each do |date, orders|
       process_disbursements(date, orders)
     end
   end

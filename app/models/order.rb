@@ -19,6 +19,9 @@ class Order < ApplicationRecord
 
   enum status: { pending: 0, processed: 1, failed: 2 }
 
+  scope :by_day, ->{ group_by(&:created_at)  }
+  scope :by_week_day, ->(start) { group_by { |o| o.created_at.beginning_of_week(start) }  }
+
   after_create :generate_fee
 
   def generate_fee
