@@ -37,6 +37,7 @@ namespace :import do
 
     progress_bar = ProgressBar.new(orders.count)
     puts "Inserting #{orders.count} orders into the database...."
+
     orders.each_slice(1000) do |batch|
       Order.insert_all(batch)
       progress_bar.increment!(batch.count)
@@ -54,8 +55,14 @@ namespace :import do
     row
   end
 
+  # calculating fee and to_pay here as will be quicker to import than
+  # to calculate on the fly when processing disbursements
   def parse_order_data(row)
-    row["guid"] = row.delete("id")
+    amount        = row["amount"].to_f
+    fee           = Order.calculate_fee(amount)
+    row["guid"]   = row.delete("id")
+    row["fee"]    = fee
+    row["to_pay"] = (amount - fee)
 
     row
   end

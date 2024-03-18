@@ -7,6 +7,7 @@ gem "pg"
 gem 'progress_bar'
 gem "puma", ">= 5.0"
 gem "rails", "~> 7.1.3", ">= 7.1.3.2"
+gem "sidekiq"
 gem "sprockets-rails"
 
 group :development do
@@ -15,6 +16,8 @@ group :development do
 end
 
 group :development, :test do
+  gem "factory_bot_rails"
+  gem 'faker'
   gem "debug", platforms: %i[ mri windows ]
   gem 'pry', '~> 0.14.2'
 end
