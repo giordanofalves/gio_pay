@@ -1,0 +1,34 @@
+<h1 class="text-3xl font-bold underline">
+  All Merchants
+</h1>
+<table class="w-full border-collapse">
+  <thead>
+    <tr>
+      <th class="py-2 px-4 border-b">Reference</th>
+      <th class="py-2 px-4 border-b">Live On</th>
+      <th class="py-2 px-4 border-b" colspan="2">Disbursements</th>
+      <th class="py-2 px-4 border-b">Minimum Monthly Fee</th>
+      <th class="py-2 px-4 border-b"></th>
+    </tr>
+    <tr>
+      <th class="py-2 px-4 border-b"></th>
+      <th class="py-2 px-4 border-b"></th>
+      <th class="py-2 px-4 border-b">Frequency</th>
+      <th class="py-2 px-4 border-b">Total</th>
+      <th class="py-2 px-4 border-b"></th>
+      <th class="py-2 px-4 border-b"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @merchants.each do |merchant| %>
+      <tr>
+        <td class="py-2 px-4 border-b"><%= merchant.reference %></td>
+        <td class="py-2 px-4 border-b"><%= merchant.live_on %></td>
+        <td class="py-2 px-4 border-b"><%= merchant.disbursement_frequency.capitalize %></td>
+        <td class="py-2 px-4 border-b"><%= merchant.disbursements.count %></td>
+        <td class="py-2 px-4 border-b"><%= number_to_currency(merchant.minimum_monthly_fee, unit: "€") %></td>
+        <td class="py-2 px-4 border-b"><%= link_to 'View', merchant_path(merchant) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
