@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+require "fileutils"
+
+# path to your application root.
+APP_ROOT = File.expand_path("..", __dir__)
+
+def system!(*args)
+  system(*args, exception: true)
+end
+
+FileUtils.chdir APP_ROOT do
+  puts "\n== Drop database =="
+  system! "bin/rails db:drop"
+
+  puts "\n== Preparing database =="
+  system! "bin/rails db:prepare"
+
+  puts "\n== Import all data =="
+  system! "bin/rake 'import:merchants[lib/fixtures/merchants.csv]'"
+  system! "bin/rake 'import:orders[lib/fixtures/orders.csv]'"
+  system! "bin/rake disbursement:process"
+
+  puts "\n== Report data =="
+  system! "bin/rake report:by_year"
+end

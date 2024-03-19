@@ -14,7 +14,8 @@ class Disbursement < ApplicationRecord
   belongs_to :merchant, foreign_key: :merchant_reference, primary_key: :reference
   has_many :orders, foreign_key: :disbursement_reference, primary_key: :reference
 
-  after_create :generate_reference
+  before_create :check_previous_monthly_fee
+  before_create :generate_reference
 
   def process_orders(order_ids)
     orders        = Order.where(id: order_ids)
@@ -26,7 +27,20 @@ class Disbursement < ApplicationRecord
 
   private
 
+  def check_previous_monthly_fee
+    previous_records_on_month = merchant.disbursements.where('created_at >= ?', self.created_at.beginning_of_month).present?
+
+    return if previous_records_on_month
+    last_month_disbursements = merchant.last_month_disbursements(created_at)
+
+    return if last_month_disbursements.empty?
+    total_disbursed_last_month = last_month_disbursements.sum(:fee)
+
+    return if total_disbursed_last_month >= merchant.minimum_monthly_fee
+    merchant.monthly_fees.create(month: created_at.beginning_of_month, amount: merchant.minimum_monthly_fee - total_disbursed_last_month )
+  end
+
   def generate_reference
-    update(reference: SecureRandom.alphanumeric(10))
+    self.reference = SecureRandom.alphanumeric(10)
   end
 end

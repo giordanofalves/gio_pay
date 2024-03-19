@@ -15,6 +15,7 @@
 class Merchant < ApplicationRecord
   has_many :orders, foreign_key: :merchant_reference, primary_key: :reference
   has_many :disbursements, foreign_key: :merchant_reference, primary_key: :reference
+  has_many :monthly_fees, foreign_key: :merchant_reference, primary_key: :reference
 
   enum disbursement_frequency: { daily: 0, weekly: 1 }
 
@@ -23,6 +24,15 @@ class Merchant < ApplicationRecord
   def perform_disbursements
     orders_data = orders.pending.select(:id, :created_at)
     daily? ? perform_daily_disbursement(orders_data) : perform_weekly_disbursement(orders_data)
+  end
+
+  def last_month_disbursements(date)
+    disbursements.where(created_at: (date - 1.month).beginning_of_month..(date - 1.month).end_of_month)
+  end
+
+  def monthly_disbursements_sum
+    return if minimum_monthly_fee == 0
+    disbursements.group("DATE_TRUNC('month', created_at)").sum(:fee).map { |date, sum| { date => [minimum_monthly_fee.to_f, sum.to_f] } }
   end
 
   private
@@ -42,8 +52,9 @@ class Merchant < ApplicationRecord
   end
 
   def process_disbursements(date, orders)
-    order_ids = orders.pluck(:id)
+    disbursement = disbursements.create(created_at: date)
+    order_ids    = orders.pluck(:id)
 
-    CreateDisbursementJob.perform_later(id, date, order_ids)
+    disbursement.process_orders(order_ids)
   end
 end

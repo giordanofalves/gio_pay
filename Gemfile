@@ -12,8 +12,8 @@ gem "stimulus-rails"
 gem "turbo-rails"
 gem "puma", ">= 5.0"
 gem "rails", "~> 7.1.3", ">= 7.1.3.2"
-gem "sidekiq"
 gem "sprockets-rails"
+gem "terminal-table"
 
 group :development do
   gem 'annotate'
