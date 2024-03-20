@@ -2,12 +2,6 @@
 
 A merchants payments process system
 
-## Getting Started
-
-```sh
-./bin/setup
-```
-
 ### Prerequisites
 
 What things you need to install the software and how to install them:
@@ -15,6 +9,16 @@ What things you need to install the software and how to install them:
 - Ruby version: 3.2.3
 
 You can find the installation instructions for Ruby [here](https://www.ruby-lang.org/en/documentation/installation/).
+
+- Postgresql
+You can find the installation instructions for Postgresql [here](https://www.w3schools.com/postgresql/postgresql_install.php)
+Update your credentials on database.yml file.
+
+## Getting Started
+
+```sh
+./bin/setup
+```
 
 ### Import data
 
@@ -45,7 +49,7 @@ rspec spec
 
 It was a great challenge to work with, I'll describe how I work during this process
 
-1. Generated a new rails project with a newsest version;
+1. Generated a new rails project with a newest version;
 2. Start to create the Merchant and Order structure, also setup a basic rspec build to test;
 3. Import Merchant and Orders
   3.1. Work in the rake task import of the initial Merchant and Orders, the trickiest part here was how to handle this number of orders that I've on csv file;

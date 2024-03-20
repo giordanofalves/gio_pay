@@ -9,7 +9,7 @@
 #  fee                    :decimal(10, 2)
 #  to_pay                 :decimal(10, 2)
 #  merchant_reference     :string           not null
-#  disbursement_reference :string           not null
+#  disbursement_reference :string
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #

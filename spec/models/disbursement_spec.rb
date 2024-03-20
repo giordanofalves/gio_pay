@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: disbursements
+#
+#  id                 :bigint           not null, primary key
+#  reference          :string
+#  merchant_reference :string           not null
+#  amount             :decimal(10, 2)
+#  fee                :decimal(10, 2)
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#
 require 'rails_helper'
 
 RSpec.describe Disbursement, type: :model do
