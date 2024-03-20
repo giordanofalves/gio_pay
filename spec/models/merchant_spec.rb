@@ -35,7 +35,7 @@ RSpec.describe Merchant, type: :model do
     let(:merchant) { create(:merchant) }
 
     describe '#perform_disbursements' do
-      let!(:orders) { create_list(:order, 3, merchant_reference: merchant.reference)}
+      let!(:orders) { create_list(:order, 3, merchant_reference: merchant.reference).sort}
 
       context 'when disbursement_frequency is daily' do
         before { merchant.update(disbursement_frequency: :daily) }
